@@ -20,7 +20,7 @@ commands:
             - run:
                 name: Login to API
                 command: |
-                    curl -X POST http://localhost/WebAPI/LogIn \
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         -H "Content-Type: application/json" \
                         -d { "UID" : "<< parameters.uid >>" }
 jobs:
@@ -37,7 +37,7 @@ jobs:
     resource_class: dmtest2/rc2
     steps:
       - test_login:
-          uid: "7d9691801f1041518f754b2cf0aab052"
+          uid: "ee4b1545c7064b0f84c446e5a6e34832"
       - run: echo "this is the test job"
 
 # Orchestrate our job run sequence
