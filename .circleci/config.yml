@@ -1,0 +1,51 @@
+# This code is licensed from CircleCI to the user under the MIT license.
+# See here for details: https://circleci.com/developer/orbs/licensing
+---
+version: 2.1
+description: |
+    Run load tests and reliability tests using DM.
+    source_url: https://github.com/dmtest2/circleci.git
+
+commands:
+    test_login:
+        description: |
+            Login
+        parameters:
+            uid:
+                default: ""
+                description: |
+                    Client UID to login to DM API
+                type: string
+        steps:
+            - run:
+                name: Login to API
+                command: |
+                    curl -X POST http://localhost/WebAPI/LogIn \
+                        -H "Content-Type: application/json" \
+                        -d { "UID" : "<< parameters.uid >>" }
+jobs:
+  build:
+    docker:
+      - image: cimg/base:current
+    resource_class: dmtest2/rc2
+    steps:
+      #- checkout
+      - run: echo "this is the build job"
+  test:
+    docker:
+      - image: cimg/base:current
+    resource_class: dmtest2/rc2
+    steps:
+      - test_login:
+          uid: "7d9691801f1041518f754b2cf0aab052"
+      - run: echo "this is the test job"
+
+# Orchestrate our job run sequence
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      #- test
+      - test:
+          requires:
+            - build
