@@ -23,6 +23,21 @@ commands:
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }'
+    create_device:
+        description: Create Device via API
+        parameters:
+            device_name:
+                default: ""
+                description: Device name
+                type: string
+        steps:
+            - run:
+                name: Create Device
+                command: |
+                    curl -X PUT https://api.dotcom-monitor.com/config_api_v1/devices \
+                        -H "Content-Type: application/json" \
+                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }'
+
 jobs:
   build:
     docker:
@@ -39,6 +54,13 @@ jobs:
       - test_login:
           uid: "ee4b1545c7064b0f84c446e5a6e34832"
       - run: echo "this is the test job"
+  create:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - create_device:
+            device_name: "new device 14t"
+      - run: echo "device << parameters.device_name >> creation done"
 
 # Orchestrate our job run sequence
 workflows:
@@ -48,3 +70,6 @@ workflows:
       - test:
           requires:
             - build
+      - create:
+          requires:
+            - test
