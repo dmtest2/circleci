@@ -27,14 +27,14 @@ jobs:
   build:
     docker:
       - image: cimg/base:current
-    resource_class: dmtest2/rc2
+    #resource_class: dmtest2/rc2
     steps:
       #- checkout
       - run: echo "this is the build job"
   test:
     docker:
       - image: cimg/base:current
-    resource_class: dmtest2/rc2
+    #resource_class: dmtest2/rc2
     steps:
       - test_login:
           uid: "ee4b1545c7064b0f84c446e5a6e34832"
