@@ -60,7 +60,8 @@ jobs:
     steps:
       - create_device:
             device_name: "new device 14t"
-      - run: echo "device << parameters.device_name >> creation done"
+      #- run: echo "device << parameters.device_name >> creation done"
+      - run: echo "device creation done"
 
 # Orchestrate our job run sequence
 workflows:
