@@ -25,7 +25,7 @@ commands:
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }' \
-                        --cookie-jar /workspace/cookie/dm.auth -v
+                        --cookie-jar workspace/cookie/dm.auth -v
             - persist_to_workspace:
                 root: workspace
                 paths:
