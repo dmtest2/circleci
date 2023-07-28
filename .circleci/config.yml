@@ -38,7 +38,8 @@ commands:
                 command: |
                     curl -X PUT https://api.dotcom-monitor.com/config_api_v1/devices \
                         -H "Content-Type: application/json" \
-                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }'
+                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }' \
+                        --cookie dm_auth_coo.kie
 
 jobs:
   build:
