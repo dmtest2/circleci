@@ -71,7 +71,7 @@ jobs:
       - image: cimg/base:current
     steps:
       - create_device:
-            device_name: "new device 14t"
+            device_name: "new device coo3"
       #- run: echo "device << parameters.device_name >> creation done"
       - run: echo "device creation done"
 
