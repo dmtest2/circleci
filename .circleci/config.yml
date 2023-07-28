@@ -18,6 +18,7 @@ commands:
                 type: string
         steps:
             - run: mkdir -p workspace
+            - run: echo "Workspace directory has been created, " > workspace/echo-output
             - run:
                 name: Login to API
                 command: |
@@ -28,7 +29,7 @@ commands:
             - persist_to_workspace:
                 root: workspace
                 paths:
-                    - dm_auth_coo.kie
+                    - echo-output
 
     create_device:
         description: Create Device via API
