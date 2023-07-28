@@ -17,19 +17,20 @@ commands:
                     Client UID to login to DM API
                 type: string
         steps:
-            - run: mkdir -p workspace
-            - run: echo "Workspace directory has been created"
+            #- run: mkdir -p workspace
+            #- run: echo "Workspace directory has been created"
             - run:
                 name: Login to API
                 command: |
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
+                        --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
-                        -d '{ "UID" : "<< parameters.uid >>" }' \
-                        --cookie-jar workspace/cookie/dm.auth -v
+                        -d '{ "UID" : "<< parameters.uid >>" }'
+
             - persist_to_workspace:
-                root: workspace
+                root: .
                 paths:
-                    - cookie
+                    - .
 
     create_device:
         description: Create Device via API
@@ -40,14 +41,14 @@ commands:
                 type: string
         steps:
             - attach_workspace:
-                at: /workspace
+                at: .
             - run:
                 name: Create Device
                 command: |
                     curl -X PUT https://api.dotcom-monitor.com/config_api_v1/devices \
+                        --cookie dm.auth \
                         -H "Content-Type: application/json" \
-                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }' \
-                        --cookie workspace/cookie/dm.auth 
+                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }'
 
 jobs:
   build:
