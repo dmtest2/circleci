@@ -17,13 +17,18 @@ commands:
                     Client UID to login to DM API
                 type: string
         steps:
+            - run: mkdir -p workspace
             - run:
                 name: Login to API
                 command: |
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }' \
-                        --cookie-jar dm_auth_coo.kie -v
+                        --cookie-jar workspace/dm_auth_coo.kie -v
+            - persist_to_workspace:
+                root: workspace
+                paths:
+                    - dm_auth_coo.kie
 
     create_device:
         description: Create Device via API
@@ -33,13 +38,15 @@ commands:
                 description: Device name
                 type: string
         steps:
+            - attach_workspace:
+                at: /workspace
             - run:
                 name: Create Device
                 command: |
                     curl -X PUT https://api.dotcom-monitor.com/config_api_v1/devices \
                         -H "Content-Type: application/json" \
                         -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }' \
-                        --cookie dm_auth_coo.kie
+                        --cookie workspace/dm_auth_coo.kie
 
 jobs:
   build:
