@@ -22,7 +22,9 @@ commands:
                 command: |
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         -H "Content-Type: application/json" \
-                        -d '{ "UID" : "<< parameters.uid >>" }'
+                        -d '{ "UID" : "<< parameters.uid >>" }' \
+                        --cookie-jar - -v
+
     create_device:
         description: Create Device via API
         parameters:
