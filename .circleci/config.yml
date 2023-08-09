@@ -103,6 +103,6 @@ workflows:
       - get_st:
           requires:
             - login_via_api
-      #- start:
-      #    requires:
-      #      - get
+      - start:
+          requires:
+            - get_st
