@@ -26,7 +26,7 @@ commands:
                 name: Login to API
                 command: |
                     export ST_ID="<< parameters.stress_id >>"
-                    echo "export ST_ID=\"$ST_ID\"" >> .
+                    echo "export ST_ID=\"$ST_ID\"" >> env.vars
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
@@ -36,7 +36,6 @@ commands:
                 root: .
                 paths:
                     - .
-                    #- /env_vars
 
     get_stress:
         steps:
@@ -45,7 +44,7 @@ commands:
             - run:
                 name: Get Stress Test details
                 command: |
-                    source .    
+                    source env.vars    
                     curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
