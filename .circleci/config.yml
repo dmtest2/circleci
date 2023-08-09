@@ -84,7 +84,7 @@ jobs:
     steps:
       - get_stress:
             stress_id: "15000"
-      - run: echo "stress test << parameters.stress_id >> getting details"
+      - run: echo "stress test getting details"
   #start:
   #  docker:
   #    - image: cimg/base:current
