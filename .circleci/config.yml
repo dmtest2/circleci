@@ -45,7 +45,7 @@ commands:
                 name: Get Stress Test details
                 command: |
                     source env.vars
-                    echo "ST_ID=\"$ST_ID\""
+                    echo "ST_ID=$ST_ID"
                     curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
