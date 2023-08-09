@@ -49,18 +49,18 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
 
-    #run_stress:
-    #    description: Start Stress
-    #    steps:
-    #        - attach_workspace:
-    #            at: .
-    #        - run:
-    #            name: Run Stress Test
-    #            command: |
-    #                curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >>/Run \
-    #                    --cookie dm.auth \
-    #                    -H "Content-Type: application/json" \
-    #                    -d '{ "UserName": "user" }'
+    run_stress:
+        description: Start Stress
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Run Stress Test
+                command: |
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >>/Run \
+                        --cookie dm.auth \
+                        -H "Content-Type: application/json" \
+                        -d '{ "UserName": "user" }'
 
 jobs:
   build:
@@ -85,12 +85,12 @@ jobs:
       - get_stress:
             stress_id: "15000"
       - run: echo "stress test getting details"
-  #start:
-  #  docker:
-  #    - image: cimg/base:current
-  #  steps:
-  #    - run_stress
-  #    - run: echo "stress test << parameters.stress_id >> starting"  
+  start:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run_stress
+      - run: echo "stress test << parameters.stress_id >> starting"  
 
 # Orchestrate our job run sequence
 workflows:
