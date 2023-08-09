@@ -38,6 +38,7 @@ commands:
                     - .
 
     get_stress:
+        description: Get Stress test details
         steps:
             - attach_workspace:
                 at: .
@@ -50,19 +51,20 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
 
-    #run_stress:
-    #    description: Start Stress
-    #    steps:
-    #        - attach_workspace:
-    #            at: .
-    #        - run:
-    #            name: Run Stress Test
-    #            command: |
-    #                source .      
-    #                curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
-    #                    --cookie dm.auth \
-    #                    -H "Content-Type: application/json" \
-    #                    -d '{ "UserName": "user" }'
+    run_stress:
+        description: Start Stress
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Run Stress Test
+                command: |
+                    source env.vars
+                    echo "ST_ID=$ST_ID"     
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
+                        --cookie dm.auth \
+                        -H "Content-Type: application/json" \
+                        -d '{ "UserName": "user" }'
 
 jobs:
   build:
@@ -88,12 +90,12 @@ jobs:
     steps:
       - get_stress
       - run: echo "stress test getting details"
-  #start:
-  #  docker:
-  #    - image: cimg/base:current
-  #  steps:
-  #    - run_stress
-  #    - run: echo "stress test << parameters.stress_id >> starting"  
+  start:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run_stress
+      - run: echo "stress test $ST_ID starting"  
 
 # Orchestrate our job run sequence
 workflows:
@@ -106,6 +108,6 @@ workflows:
       - get_st:
           requires:
             - login_via_api
-      #- start:
-      #    requires:
-      #      - get_st
+      - start:
+          requires:
+            - get_st
