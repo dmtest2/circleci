@@ -13,8 +13,11 @@ commands:
         parameters:
             uid:
                 default: ""
-                description: |
-                    Client UID to login to DM API
+                description: Client UID to login to DM API
+                type: string
+            stress_id:
+                default: ""
+                description: Stress test ID
                 type: string
         steps:
             #- run: mkdir -p workspace
@@ -22,6 +25,7 @@ commands:
             - run:
                 name: Login to API
                 command: |
+                    export ST_ID = "<< parameters.stress_id >>"
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
@@ -34,18 +38,19 @@ commands:
 
     get_stress:
         description: Get Stress Test details
-        parameters:
-            stress_id:
-                default: ""
-                description: Stress test ID
-                type: string
+        #parameters:
+        #    stress_id:
+        #        default: ""
+        #        description: Stress test ID
+        #        type: string
         steps:
             - attach_workspace:
                 at: .
             - run:
                 name: Get Stress Test details
                 command: |
-                    curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >> \
+                    source .    
+                    curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
 
@@ -57,7 +62,8 @@ commands:
             - run:
                 name: Run Stress Test
                 command: |
-                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >>/Run \
+                    source .      
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
                         -d '{ "UserName": "user" }'
