@@ -27,7 +27,7 @@ commands:
                 command: |
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
-                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }'
@@ -78,8 +78,8 @@ jobs:
     #resource_class: dmtest2/rc2
     steps:
       - login:
-          #uid: "99732cae08ae43b7a1d17f3564fdf135"
-          uid: "ee4b1545c7064b0f84c446e5a6e34832"
+          uid: "99732cae08ae43b7a1d17f3564fdf135"
+          #uid: "ee4b1545c7064b0f84c446e5a6e34832"
           stress_id: "15000"
       - run: echo "login done"
   get_st:
