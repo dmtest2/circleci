@@ -25,7 +25,7 @@ commands:
             - run:
                 name: Login to API
                 command: |
-                    export ST_ID = "<< parameters.stress_id >>"
+                    export ST_ID="<< parameters.stress_id >>"
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
