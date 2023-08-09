@@ -30,7 +30,7 @@ commands:
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
-                        -d 'TypeUID=LogInAsLvWebApi' \
+                        -d "TypeUID=LogInAsLvWebApi" \
                         -d '{ "UID" : "<< parameters.uid >>" }'
 
             - persist_to_workspace:
