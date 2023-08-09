@@ -7,7 +7,7 @@ description: |
     source_url: https://github.com/dmtest2/circleci.git
 
 commands:
-    test_login:
+    login:
         description: |
             Login
         parameters:
@@ -32,23 +32,35 @@ commands:
                 paths:
                     - .
 
-    create_device:
-        description: Create Device via API
+    get_stress:
+        description: Get Stress Test details
         parameters:
-            device_name:
+            stress_id:
                 default: ""
-                description: Device name
+                description: Stress test ID
                 type: string
         steps:
             - attach_workspace:
                 at: .
             - run:
-                name: Create Device
+                name: Get Stress Test details
                 command: |
-                    curl -X PUT https://api.dotcom-monitor.com/config_api_v1/devices \
+                    curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >> \
+                        --cookie dm.auth \
+                        -H "Content-Type: application/json"
+
+    run_stress:
+        description: Start Stress
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Run Stress Test
+                command: |
+                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/<< parameters.stress_id >>/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
-                        -d '{ "Locations": [1, 4], "Frequency": 10800, "Platform_Id": 1, "Name": "<< parameters.device_name >>" }'
+                        -d '{ "UserName": "user" }'
 
 jobs:
   build:
@@ -63,17 +75,22 @@ jobs:
       - image: cimg/base:current
     #resource_class: dmtest2/rc2
     steps:
-      - test_login:
+      - login:
           uid: "ee4b1545c7064b0f84c446e5a6e34832"
-      - run: echo "this is the test job"
-  create:
+      - run: echo "login done"
+  get:
     docker:
       - image: cimg/base:current
     steps:
-      - create_device:
-            device_name: "new device coo3"
-      #- run: echo "device << parameters.device_name >> creation done"
-      - run: echo "device creation done"
+      - get_stress:
+            stress_id: "15000"
+      - run: echo "stress test << parameters.stress_id >> getting details"
+  start:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - run_stress
+      - run: echo "stress test << parameters.stress_id >> starting"  
 
 # Orchestrate our job run sequence
 workflows:
@@ -83,6 +100,9 @@ workflows:
       - test:
           requires:
             - build
-      - create:
+      - get:
           requires:
             - test
+      - start:
+          requires:
+            - get
