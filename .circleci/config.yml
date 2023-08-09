@@ -35,6 +35,7 @@ commands:
                 root: .
                 paths:
                     - .
+                    - env_vars
 
     get_stress:
         steps:
@@ -43,7 +44,7 @@ commands:
             - run:
                 name: Get Stress Test details
                 command: |
-                    source .    
+                    source env_vars    
                     curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
