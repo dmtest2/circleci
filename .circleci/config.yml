@@ -50,6 +50,7 @@ commands:
                     curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
+                    echo "stress test $ST_ID getting details"
 
     run_stress:
         description: Start Stress
@@ -65,6 +66,7 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
                         -d '{ "UserName": "user" }'
+                    echo "stress test $ST_ID starting" 
 
 jobs:
   build:
@@ -89,13 +91,11 @@ jobs:
       - image: cimg/base:current
     steps:
       - get_stress
-      - run: echo "stress test getting details"
   start:
     docker:
       - image: cimg/base:current
     steps:
       - run_stress
-      - run: echo "stress test $ST_ID starting"  
 
 # Orchestrate our job run sequence
 workflows:
