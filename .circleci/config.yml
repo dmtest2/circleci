@@ -87,7 +87,7 @@ jobs:
     #resource_class: dmtest2/rc2
     steps:
       - login:
-          uid: "99732cae08ae43b7a1d17f3564fdf135-0"
+          uid: "99732cae08ae43b7a1d17f3564fdf135"
           #uid: "ee4b1545c7064b0f84c446e5a6e34832"
           stress_id: "131498"
       - run: echo "login done"
