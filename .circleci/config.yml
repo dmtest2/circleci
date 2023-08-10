@@ -88,23 +88,13 @@ commands:
                     echo "stress test $ST_ID starting"
                     status=$(echo $resp | grep -o '"Success":[a-z]*' | grep -o '[^:]*$')
                     result_id=$(echo $resp | grep -o '"Result":[0-9]*' | grep -o '[^:]*$')
-                    echo "test"
-                    echo $status
-                    echo $result_id
-                    echo "test2"
-                    if [[ $result_id -gt 0 ]]
-                    then echo "22Stress $ST_ID has been run; result is $result_id"
-                    else
-                        echo "ERROR running Stress $ST_ID"
-                        exit 403
-                    fi
                     if [[ $status = "true" ]] && [[ $result_id -gt 0 ]]
                     then
                         echo "Stress $ST_ID has been started successfully; result stress id $result_id"
                         export Result_ID=$result_id
                         echo "export Result_ID=$Result_ID" >> env.vars 
                     else
-                        echo "ERROR running Stress $ST_ID"
+                        echo "ERROR starting Stress $ST_ID"
                         exit 403
                     fi
             - persist_to_workspace:
@@ -120,11 +110,13 @@ commands:
             - run:
                 name: Check Stress Test results
                 command: |
-                    echo "stress test $Result_ID result checking"
                     source env.vars
+                    echo "stress test result $Result_ID for original $ST_ID checking"
+                    echo "duration: $duration"
                     resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$Result_ID/Result \
                         --cookie dm.auth \
                         -H "Content-Type: application/json")
+                    echo $resp
 
 jobs:
   build:
@@ -142,7 +134,7 @@ jobs:
       - login:
           uid: "99732cae08ae43b7a1d17f3564fdf135"
           stress_id: "131492"
-  get_st:
+  get_st_details:
     docker:
       - image: cimg/base:current
     steps:
@@ -152,6 +144,11 @@ jobs:
       - image: cimg/base:current
     steps:
       - run_stress
+  get_st_results:
+    docker:
+      - image: cimg/base:current
+    steps:
+      - get_st_result
 
 # Orchestrate our job run sequence
 workflows:
@@ -161,9 +158,12 @@ workflows:
       - login_via_api:
           requires:
             - build
-      - get_st:
+      - get_st_details:
           requires:
             - login_via_api
       - start:
           requires:
-            - get_st
+            - get_st_details
+      - get_st_results:
+          requires:
+            - start
