@@ -112,32 +112,6 @@ commands:
                 name: Check Stress Test results
                 command: |
                     source env.vars
-                    echo "test1"
-                    till3=$(date -d "$(date) + 10 seconds")
-                    found2=0
-                    while [[ found2 -ne 1 ]] && ! [[ $(date) > $till3 ]]
-                    do
-                        sleep 1s
-                        echo "here11"
-                    done
-                    if [[ $found2 -eq 1 ]]
-                    then echo "completed11!"
-                    else echo "ERROR11"
-                    fi               
-                    echo "test2"
-                    till3=$(date -d "$(date) + 10 seconds")
-                    found2=0
-                    counter=0
-                    while [[ found2 -ne 1 ]] && ! [[ $(date) > $till3 ]]
-                    do
-                        sleep 1s
-                        echo "here22"
-                        found2=1
-                    done
-                    if [[ $found2 -eq 1 ]]
-                    then echo "completed22!"
-                    else echo "ERROR22"
-                    fi
                     echo "stress test result $Result_ID for original stress $ST_ID checking"
                     total=$((duration+600))
                     till1=$(date -d "$(date) + $duration seconds")
