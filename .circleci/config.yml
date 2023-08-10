@@ -51,11 +51,16 @@ commands:
                 name: Get Stress Test details
                 command: |
                     source env.vars
-                    curl -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
+                    resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID \
                         --cookie dm.auth \
-                        -H "Content-Type: application/json"
+                        -H "Content-Type: application/json")
                     echo "stress test $ST_ID getting details"
-                    export duration=257
+                    arr=$(echo $resp | grep -o '"DurationSec":[^,]*' | grep -o '[^:]*$')
+                    result=0
+                    for i in ${arr[@]}; do
+                        result=$((result+i))
+                    done
+                    export duration=$result
                     echo "export duration=$duration" >> env.vars
                     echo "111: $ST_ID --- $duration" 
             - persist_to_workspace:
