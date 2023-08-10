@@ -27,11 +27,11 @@ commands:
                 command: |
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
-                    resp = $(curl -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
+                    RESP = $(curl POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }')
-                    echo "$resp"
+                    echo "$RESP"
 
             - persist_to_workspace:
                 root: .
