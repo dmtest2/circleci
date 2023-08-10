@@ -7,28 +7,6 @@ description: |
     source_url: https://github.com/dmtest2/circleci.git
 
 commands:
-    #prepare:
-    #    description: Prepare
-    #    parameters:
-    #        uid:
-    #            default: ""
-    #            description: Client UID to login to DM API
-    #            type: string
-    #        stress_id:
-    #            default: ""
-    #            description: Stress test ID
-    #            type: string
-    #    steps:
-    #        - run:
-    #            command: |
-    #                export UID="<< parameters.uid >>"
-    #                echo "export UID=\"$UID\"" >> env.vars
-    #                export ST_ID="<< parameters.stress_id >>"
-    #                echo "export ST_ID=\"$ST_ID\"" >> env.vars
-    #        - persist_to_workspace:
-    #            root: .
-    #            paths:
-    #                - .
     login:
         description: Login
         parameters:
@@ -48,8 +26,8 @@ commands:
             - run:
                 name: Login to API
                 command: |
-                    export UID="<< parameters.uid >>"
-                    echo "export UID=\"$UID\"" >> env.vars
+                    export VAR_UID="<< parameters.uid >>"
+                    echo "export VAR_UID=\"$VAR_UID\"" >> env.vars
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
                     #source env.vars
@@ -160,7 +138,7 @@ commands:
                                 resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                                     --cookie-jar dm.auth -v \
                                     -H "Content-Type: application/json" \
-                                    -d '{ "UID" : "$UID" }')
+                                    -d '{ "UID" : "$VAR_UID" }')
                                 if [[ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]]
                                 then echo "client re-logged in"
                                 else
