@@ -58,6 +58,7 @@ commands:
                     echo "stress test $ST_ID getting details"
                     export duration=256
                     echo "export duration=$duration" >> env.vars
+                    echo "export duration=$duration done"
 
     run_stress:
         description: Start Stress
