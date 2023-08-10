@@ -60,7 +60,8 @@ commands:
                     for i in ${arr[@]}; do
                         result=$((result+i))
                     done
-                    if [[ $result -le 0 ]] then
+                    if [[ $result -le 0 ]]
+                    then
                         echo "ERROR getting Stress $ST_ID settings"
                         exit 403
                     fi
