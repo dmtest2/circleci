@@ -138,7 +138,6 @@ commands:
                                     -H "Content-Type: application/json" \
                                     -d '{ "UID" : "$ClientUID" }')
                                 echo $resp
-
                                 if [[ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]]
                                 then echo "client re-logged in"
                                 else
