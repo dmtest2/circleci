@@ -147,7 +147,7 @@ commands:
                                     --cookie dm.auth \
                                     -H "Content-Type: application/json")
                             fi
-                            echo $resp
+                            echo $resp                            
                             status=$(echo $resp | grep -o '"StatusDesc":"[A-z]*')
                             echo $status
                             status=$(echo $resp | grep -o '"StatusDesc":"[A-z]*' | grep -o '[A-z]*$')
