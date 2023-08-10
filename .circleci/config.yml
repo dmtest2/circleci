@@ -129,15 +129,17 @@ commands:
                         resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$Result_ID/Result \
                             --cookie dm.auth \
                             -H "Content-Type: application/json")
-                        status=$(echo $resp | grep -o '"StatusDesc":"[A-z]*' | grep -o '[^:]*$')
-                        status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
-                        has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
-                        echo "results: $status; $status_code; $has_data"
-                        if [[ $status = "Completed" ]] && [[ $has_data = "true" ]]
-                        then
-                            found=1
-                            current=$total 
-                        fi
+                        {
+                            status=$(echo $resp | grep -o '"StatusDesc":"[A-z]*' | grep -o '[^:]*$')
+                            status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
+                            has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
+                            echo "results: $status; $status_code; $has_data"
+                            if [[ $status = "Completed" ]] && [[ $has_data = "true" ]]
+                            then
+                                found=1
+                                current=$total 
+                            fi
+                        } || echo "no data"
                     done
                     if [[ $fount -eq 1 ]]
                     then echo "completed!"
