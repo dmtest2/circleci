@@ -150,11 +150,9 @@ commands:
                             echo $resp
                             status=$(echo $resp | grep -o '"StatusDesc":[^,]*')
                             echo $status
-                            arr=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[A-z]*')
-                            echo $arr
-                            for i in ${arr[@]} do
-                                status=$i
-                            done
+                            status=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[^"]*"$')
+                            echo $status
+                            status=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[^"]*"$' | grep -o '^[^"]*')
                             echo $status
                             status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
                             has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
