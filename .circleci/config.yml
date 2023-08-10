@@ -61,8 +61,7 @@ commands:
                         result=$((result+i))
                     done
                     export duration=$result
-                    echo "export duration=$duration" >> env.vars
-                    echo "111: $ST_ID --- $duration" 
+                    echo "export duration=$duration" >> env.vars 
             - persist_to_workspace:
                 root: .
                 paths:
@@ -77,11 +76,10 @@ commands:
                 name: Run Stress Test
                 command: |
                     source env.vars
-                    echo "222: $ST_ID --- $duration" 
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
-                        -d '{ "UserName": "user" }'
+                        -d '{ "UserName": "circleci" }'
                     echo "stress test $ST_ID starting" 
 
 jobs:
@@ -100,7 +98,6 @@ jobs:
       - login:
           uid: "99732cae08ae43b7a1d17f3564fdf135"
           stress_id: "131492"
-      - run: echo "login done"
   get_st:
     docker:
       - image: cimg/base:current
