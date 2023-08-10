@@ -23,8 +23,8 @@ commands:
             - run:
                 name: Login to API
                 command: |
-                    export VAR_UID="<< parameters.uid >>"
-                    echo "export VAR_UID=\"$VAR_UID\"" >> env.vars
+                    export ClientUID="<< parameters.uid >>"
+                    echo "export ClientUID=\"$ClientUID\"" >> env.vars
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
                     #source env.vars
@@ -135,7 +135,7 @@ commands:
                                 resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                                     --cookie-jar dm.auth -v \
                                     -H "Content-Type: application/json" \
-                                    -d '{ "UID" : "$VAR_UID" }')
+                                    -d '{ "UID" : "$ClientUID" }')
                                 if [[ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]]
                                 then echo "client re-logged in"
                                 else
