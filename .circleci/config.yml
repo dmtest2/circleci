@@ -8,8 +8,7 @@ description: |
 
 commands:
     login:
-        description: |
-            Login
+        description: Login
         parameters:
             uid:
                 default: ""
@@ -56,9 +55,13 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
                     echo "stress test $ST_ID getting details"
-                    export duration="256"
-                    echo "export duration=$duration" >> env.vars
-                    echo "111: $ST_ID --- $duration" 
+                    export DURATION="256"
+                    echo "export DURATION=$DURATION" >> env.vars
+                    echo "111: $ST_ID --- $DURATION" 
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
 
     run_stress:
         description: Start Stress
@@ -69,7 +72,7 @@ commands:
                 name: Run Stress Test
                 command: |
                     source env.vars
-                    echo "222: $ST_ID --- $duration" 
+                    echo "222: $ST_ID --- $DURATION" 
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
