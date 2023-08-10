@@ -152,7 +152,7 @@ commands:
                             echo $status
                             arr=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[A-z]*')
                             echo $arr
-                            for i in $arr do
+                            for i in ${arr[@]} do
                                 status=$i
                             done
                             echo $status
