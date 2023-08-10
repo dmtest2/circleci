@@ -56,7 +56,7 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json"
                     echo "stress test $ST_ID getting details"
-                    export duration=256
+                    export duration="256"
                     echo "export duration=$duration" >> env.vars
                     echo "111: $ST_ID --- $duration" 
 
