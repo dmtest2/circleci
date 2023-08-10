@@ -35,6 +35,10 @@ commands:
                     then echo "result is correct!"
                     else echo "ERROR here!"
                     fi
+                    if $resp!='{"Success":true,"Result":"OK"}'
+                    then echo "result2 is correct!"
+                    else echo "ERROR2 here!"
+                    fi
 
             - persist_to_workspace:
                 root: .
