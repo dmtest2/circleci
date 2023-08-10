@@ -58,7 +58,7 @@ commands:
                     echo "stress test $ST_ID getting details"
                     export duration=256
                     echo "export duration=$duration" >> env.vars
-                    echo "export duration=$duration done"
+                    echo "111: $ST_ID --- $duration" 
 
     run_stress:
         description: Start Stress
@@ -69,7 +69,7 @@ commands:
                 name: Run Stress Test
                 command: |
                     source env.vars
-                    echo "$ST_ID --- $duration" 
+                    echo "222: $ST_ID --- $duration" 
                     curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
