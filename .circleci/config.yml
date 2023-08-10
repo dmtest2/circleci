@@ -93,17 +93,16 @@ commands:
                     echo $result_id
                     echo "test2"
                     if [[ $result_id -gt 0 ]]
-                    then
-                        echo "$duration"
-                        echo "22Stress $ST_ID has been run; result is $result_id"
+                    then echo "22Stress $ST_ID has been run; result is $result_id"
                     else
                         echo "ERROR running Stress $ST_ID"
                         exit 403
                     fi
-                    if [[ $status -gt 0 ]] && [[ $result_id -gt 0 ]]
+                    if [[ $status = "true" ]] && [[ $result_id -gt 0 ]]
                     then
-                        echo "$duration"
-                        echo "33Stress $ST_ID has been run; result is $result_id"
+                        echo "Stress $ST_ID has been started successfully; result stress id $result_id"
+                        export Result_ID=$result_id
+                        echo "export Result_ID=$Result_ID" >> env.vars 
                     else
                         echo "ERROR running Stress $ST_ID"
                         exit 403
