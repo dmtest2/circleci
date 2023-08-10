@@ -118,7 +118,7 @@ commands:
                     till2=$(date -d "$(date) + $total seconds")
                     echo "checking from $(date) till $till2"
                     found=0
-                    while ! [[ $(date) > $till2 ]]
+                    while [[ found -ne 1 ]] && ! [[ $(date) > $till2 ]]
                     do
                         if [[ $(date) > $till1 ]]
                         then sleep 60s
@@ -148,19 +148,28 @@ commands:
                                     -H "Content-Type: application/json")
                             fi
                             echo $resp
-                            status=$(echo $resp | grep -o '"StatusDesc":[^,]*')
-                            echo $status
-                            status=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[^"]*"$')
-                            echo $status
                             status=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[^"]*"$' | grep -o '^[^"]*')
                             echo $status
                             status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
                             has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
                             echo "$(date) results: $status; $status_code; $has_data"
+                            if [[ $status = "Completed" ]]
+                            then echo 11
+                            else echo 12
+                            fi
+                            if [[ $status = *"Completed"* ]]
+                            then echo 21
+                            else echo 22
+                            fi
                             if [[ $status = "Completed" ]] && [[ $has_data = "true" ]]
-                            then
+                            then 
                                 found=1
-                                current=$total 
+                                echo "here11 $found"
+                            fi
+                            if [[ $status = *"Completed"* ]] && [[ $has_data = "true" ]]
+                            then 
+                                found=1
+                                echo "here22 $found"
                             fi
                         } || echo "$(date) no data"
                     done
