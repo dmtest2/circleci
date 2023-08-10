@@ -7,6 +7,28 @@ description: |
     source_url: https://github.com/dmtest2/circleci.git
 
 commands:
+    #prepare:
+    #    description: Prepare
+    #    parameters:
+    #        uid:
+    #            default: ""
+    #            description: Client UID to login to DM API
+    #            type: string
+    #        stress_id:
+    #            default: ""
+    #            description: Stress test ID
+    #            type: string
+    #    steps:
+    #        - run:
+    #            command: |
+    #                export UID="<< parameters.uid >>"
+    #                echo "export UID=\"$UID\"" >> env.vars
+    #                export ST_ID="<< parameters.stress_id >>"
+    #                echo "export ST_ID=\"$ST_ID\"" >> env.vars
+    #        - persist_to_workspace:
+    #            root: .
+    #            paths:
+    #                - .
     login:
         description: Login
         parameters:
@@ -19,13 +41,18 @@ commands:
                 description: Stress test ID
                 type: string
         steps:
+            #- attach_workspace:
+            #    at: .
             #- run: mkdir -p workspace
             #- run: echo "Workspace directory has been created"
             - run:
                 name: Login to API
                 command: |
+                    export UID="<< parameters.uid >>"
+                    echo "export UID=\"$UID\"" >> env.vars
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
+                    #source env.vars
                     resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
@@ -36,7 +63,6 @@ commands:
                         echo "ERROR logging in"
                         exit 403
                     fi
-
             - persist_to_workspace:
                 root: .
                 paths:
@@ -130,6 +156,24 @@ commands:
                             --cookie dm.auth \
                             -H "Content-Type: application/json")
                         {
+                            #You are not authorised check
+                            if [[ $resp == *"You are not authorised"* ]]
+                            then
+                                echo "need to relogin"
+                                resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
+                                    --cookie-jar dm.auth -v \
+                                    -H "Content-Type: application/json" \
+                                    -d '{ "UID" : "$UID" }')
+                                if [[ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]]
+                                then echo "client re-logged in"
+                                else
+                                    echo "ERROR logging in"
+                                    exit 403
+                                fi
+                                resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$Result_ID/Result \
+                                    --cookie dm.auth \
+                                    -H "Content-Type: application/json")
+                            fi
                             status=$(echo $resp | grep -o '"StatusDesc":"[A-z]*' | grep -o '[^:]*$')
                             status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
                             has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
@@ -147,6 +191,11 @@ commands:
                         echo "ERROR stress $Result_ID failed"
                         exit 500
                     fi
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
 jobs:
   build:
     docker:
