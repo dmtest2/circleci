@@ -37,6 +37,7 @@ commands:
                         echo "ERROR logging in"
                         exit 403
                     fi
+                    echo "done"
 
             - persist_to_workspace:
                 root: .
