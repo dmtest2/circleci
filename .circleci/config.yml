@@ -31,11 +31,11 @@ commands:
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }')
-                    if $resp='{"Success":true,"Result":"OK"}'
+                    if $resp="{\"Success\":true,\"Result\":\"OK\"}"
                     then echo "result is correct!"
                     else echo "ERROR here!"
                     fi
-                    if $resp!='{"Success":true,"Result":"OK"}'
+                    if $resp!="{\"Success\":true,\"Result\":\"OK\"}"
                     then echo "result2 is correct!"
                     else echo "ERROR2 here!"
                     fi
