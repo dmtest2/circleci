@@ -31,13 +31,11 @@ commands:
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }')
-                    if $resp="{\"Success\":true,\"Result\":\"OK\"}"
-                    then echo "result is correct!"
-                    else echo "ERROR here!"
-                    fi
-                    if $resp!="{\"Success\":true,\"Result\":\"OK\"}"
-                    then echo "result2 is correct!"
-                    else echo "ERROR2 here!"
+                    if [ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]
+                    then echo "client logged in"
+                    else | 
+                        echo "ERROR logging in"
+                        raise error "ERROR logging in"
                     fi
 
             - persist_to_workspace:
@@ -88,7 +86,7 @@ jobs:
     #resource_class: dmtest2/rc2
     steps:
       - login:
-          uid: "99732cae08ae43b7a1d17f3564fdf135"
+          uid: "99732cae08ae43b7a1d17f3564fdf135-0"
           #uid: "ee4b1545c7064b0f84c446e5a6e34832"
           stress_id: "131498"
       - run: echo "login done"
