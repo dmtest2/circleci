@@ -31,7 +31,7 @@ commands:
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
                         -d '{ "UID" : "<< parameters.uid >>" }')
-                    if [ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ];
+                    if [ $resp = "{\"Success\":true,\"Result\":\"OK\"}" ]
                     then echo "client logged in"
                     else
                         echo "ERROR logging in"
