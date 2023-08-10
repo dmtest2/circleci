@@ -23,7 +23,7 @@ commands:
             - run:
                 name: Login to API
                 command: |
-                    export VAR_UID="<< parameters.uid >>"
+                    export VAR_U33ID="<< parameters.uid >>"
                     echo "export VAR_UID=\"$VAR_UID\"" >> env.vars
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
