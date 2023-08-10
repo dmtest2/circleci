@@ -116,11 +116,11 @@ commands:
                     echo "duration: $duration"
                     total=$((duration+600))
                     till1=$(date -d "$(date) + $duration seconds")
-                    till2=$(date -d "$(date) + $((total+1)) seconds")
+                    till2=$(date -d "$(date) + $total seconds")
                     echo $till1
                     echo $till2
                     found=0
-                    while [[ $(date) < $till2 ]]
+                    while ! [[ $(date) > $till2 ]]
                     do
                         if [[ $(date) > $till1 ]]
                         then sleep 60s
