@@ -19,10 +19,7 @@ commands:
                 description: Stress test ID
                 type: string
         steps:
-            #- attach_workspace:
-            #    at: .
             #- run: mkdir -p workspace
-            #- run: echo "Workspace directory has been created"
             - run:
                 name: Login to API
                 command: |
