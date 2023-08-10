@@ -162,7 +162,7 @@ commands:
                             fi
                         } || echo "$(date) no data"
                     done
-                    if [[ $fount -eq 1 ]]
+                    if [[ $found -eq 1 ]]
                     then echo "completed!"
                     else
                         echo "ERROR stress $Result_ID failed"
