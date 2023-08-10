@@ -55,11 +55,15 @@ commands:
                         --cookie dm.auth \
                         -H "Content-Type: application/json")
                     echo "stress test $ST_ID getting details"
-                    arr=$(echo $resp | grep -o '"DurationSec":[^,]*' | grep -o '[^:]*$')
+                    arr=$(echo $resp | grep -o '"DurationSec":[0-9]*' | grep -o '[^:]*$')
                     result=0
                     for i in ${arr[@]}; do
                         result=$((result+i))
                     done
+                    if [[ $result -le 0 ]] then
+                        echo "ERROR getting Stress $ST_ID settings"
+                        exit 403
+                    fi
                     export duration=$result
                     echo "export duration=$duration" >> env.vars 
             - persist_to_workspace:
@@ -76,11 +80,35 @@ commands:
                 name: Run Stress Test
                 command: |
                     source env.vars
-                    curl -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
+                    resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/StressTest/$ST_ID/Run \
                         --cookie dm.auth \
                         -H "Content-Type: application/json" \
-                        -d '{ "UserName": "circleci" }'
-                    echo "stress test $ST_ID starting" 
+                        -d '{ "UserName": "circleci" }')
+                    echo "stress test $ST_ID starting"
+                    status=$(echo $resp | grep -o '"Success":[a-z]*' | grep -o '[^:]*$')
+                    result_id=$(echo $resp | grep -o '"Result":[0-9]*' | grep -o '[^:]*$')
+                    echo "test"
+                    echo $status
+                    echo $result_id
+                    echo "test2"
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - .
+
+    get_st_result:
+        description: Get Stress Results
+        steps:
+            - attach_workspace:
+                at: .
+            - run:
+                name: Check Stress Test results
+                command: |
+                    echo "stress test $Result_ID result checking"
+                    source env.vars
+                    resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$Result_ID/Result \
+                        --cookie dm.auth \
+                        -H "Content-Type: application/json")
 
 jobs:
   build:
