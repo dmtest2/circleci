@@ -140,17 +140,14 @@ commands:
                     echo "stress test result $Result_ID for original stress $ST_ID checking"
                     echo "duration: $duration"
                     total=$((duration+600))
-                    current=0
+                    till1=$(date -d "$(date) + $duration seconds")
+                    till2=$(date -d "$(date) + $total seconds")
                     found=0
-                    while [[ $current -lt $total ]]
+                    while [[ $(date) <= $till2 ]]
                     do
-                        if [[ $current -le $duration ]]
-                        then
-                            sleep 120s
-                            current=$((curent+120))
-                        else
-                            sleep 60s
-                            current=$((curent+60))
+                        if [[ $(date) <= $till1 ]]
+                        then sleep 120s
+                        else sleep 60s
                         fi
                         resp=$(curl -sb -X GET https://api.dotcom-monitor.com/config_api_v1/StressTest/$Result_ID/Result \
                             --cookie dm.auth \
