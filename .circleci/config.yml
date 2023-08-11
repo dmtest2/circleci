@@ -125,12 +125,14 @@ commands:
                     total=$((duration+600))
                     till1=$(date -d "$(date) + $duration seconds")
                     till2=$(date -d "$(date) + $total seconds")
+                    u1=$(date -d "$till1" +'%s.%3N')
+                    u2=$(date -d "$till2" +'%s.%3N')
                     echo "checking from $(date) till $till2"
                     found=0
-                    #possibly problem at the end of day
-                    while [[ found -ne 1 ]] && ! [[ $(date) > $till2 ]]
+                    now=$(date -d "$(date)" +'%s.%3N')
+                    while [[ found -ne 1 ]] && ! [[ $now > $u2 ]]
                     do
-                        if [[ $(date) > $till1 ]]
+                        if [[ $now > $u1 ]]
                         then sleep 60s
                         else sleep 120s
                         fi
@@ -180,6 +182,7 @@ commands:
                                 fi
                             fi
                         } || echo "$(date) no data"
+                        now=$(date -d "$(date)" +'%s.%3N')
                     done
                     if [[ $found -eq 1 ]]
                     then echo "completed!"
