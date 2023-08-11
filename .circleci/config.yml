@@ -172,9 +172,12 @@ commands:
                                 sessions=$(echo $resp | grep -o '"SessionsCount":[0-9]*' | grep -o '[^:]*$')
                                 sessions_failed=$(echo $resp | grep -o '"SessionsCountFailed":[0-9]*' | grep -o '[^:]*$')
                                 echo "$session --- $sessions_failed"
-                                limit=$sessions*$percent
+                                limit=$(($sessions * $percent))
                                 sessions_failed=$((sessions_failed * 100))
                                 echo "$limit --- $sessions_failed"
+                                if [[ $sessions_failed -lt $limit ]]
+                                then echo "test"
+                                fi
                                 if [[ $sessions_failed -gt $limit ]]
                                 then
                                     echo "ERROR stress $Result_ID too many failed sessions"
