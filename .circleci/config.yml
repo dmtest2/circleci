@@ -148,9 +148,8 @@ commands:
                                     --cookie dm.auth \
                                     -H "Content-Type: application/json")
                             fi
-                            echo $resp
+                            #echo $resp
                             status=$(echo $resp | grep -o '"StatusDesc":[^,]*' | grep -o '[^"]*"$' | grep -o '^[^"]*')
-                            echo $status
                             status_code=$(echo $resp | grep -o '"StatusCode":[0-9]*' | grep -o '[^:]*$')
                             has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
                             echo "$(date) results: $status; $status_code; $has_data"
