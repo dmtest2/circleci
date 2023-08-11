@@ -35,7 +35,7 @@ commands:
                     if [[ percent_value -lt 0 ]] || [[ percent_value -gt 100 ]]
                     then percent_value=3
                     fi
-                    export percent=percent_value
+                    export percent=$percent_value
                     echo "export percent=\"$percent\"" >> env.vars
                     resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                         --cookie-jar dm.auth -v \
