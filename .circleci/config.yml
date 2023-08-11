@@ -166,20 +166,19 @@ commands:
                             then
                                 found=1
                                 echo $resp
+                                #check SessionsCountFailed SessionsCount
+                                sessions=$(echo $resp | grep -o '"SessionsCount":[0-9]*' | grep -o '[^:]*$')
+                                sessions_failed=$(echo $resp | grep -o '"SessionsCountFailed":[0-9]*' | grep -o '[^:]*$')
+                                echo "$session --- $sessions_failed"
+                                limit=$sessions*$percent
+                                sessions_failed=$((sessions_failed * 100))
+                                echo "$limit --- $sessions_failed"
+                                if [[ $sessions_failed -gt $limit ]]
+                                then
+                                    echo "ERROR stress $Result_ID too many failed sessions"
+                                    exit 501
+                                fi
                             fi
-                            #check SessionsCountFailed SessionsCount
-                            sessions=$(echo $resp | grep -o '"SessionsCount":[0-9]*' | grep -o '[^:]*$')
-                            sessions_failed=$(echo $resp | grep -o '"SessionsCountFailed":[0-9]*' | grep -o '[^:]*$')
-                            echo "$session --- $sessions_failed"
-                            limit=$sessions*$percent
-                            sessions_failed=$((sessions_failed * 100))
-                            echo "$limit --- $sessions_failed"
-                            if [[ $sessions_failed -gt $limit ]]
-                            then
-                                echo "ERROR stress $Result_ID too many failed sessions"
-                                exit 501
-                            fi
-
                         } || echo "$(date) no data"
                     done
                     if [[ $found -eq 1 ]]
