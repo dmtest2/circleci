@@ -18,6 +18,10 @@ commands:
                 default: ""
                 description: Stress test ID
                 type: string
+            failed_sessions_percentage:
+                default: 3
+                description: Failed Sessions Percentage
+                type: integer
         steps:
             #- run: mkdir -p workspace
             - run:
@@ -27,7 +31,12 @@ commands:
                     echo "export ClientUID=\"$ClientUID\"" >> env.vars
                     export ST_ID="<< parameters.stress_id >>"
                     echo "export ST_ID=\"$ST_ID\"" >> env.vars
-                    #source env.vars
+                    percent_value=<< parameters.failed_sessions_percentage >>
+                    if [[ percent_value -lt 0 ]] || [[ percent_value -gt 100 ]]
+                    then percent_value=3
+                    fi
+                    export percent=percent_value
+                    echo "export percent=\"$percent\"" >> env.vars
                     resp=$(curl -sb -X POST https://api.dotcom-monitor.com/config_api_v1/LogIn?TypeUID=LogInAsLvWebApi \
                         --cookie-jar dm.auth -v \
                         -H "Content-Type: application/json" \
@@ -154,8 +163,23 @@ commands:
                             has_data=$(echo $resp | grep -o '"HasData":[a-z]*' | grep -o '[^:]*$')
                             echo "$(date) results: $status; $status_code; $has_data"
                             if [[ $status = "Completed" ]] && [[ $has_data = "true" ]]
-                            then found=1
+                            then
+                                found=1
+                                echo $resp
                             fi
+                            #check SessionsCountFailed SessionsCount
+                            sessions=$(echo $resp | grep -o '"SessionsCount":[0-9]*' | grep -o '[^:]*$')
+                            sessions_failed=$(echo $resp | grep -o '"SessionsCountFailed":[0-9]*' | grep -o '[^:]*$')
+                            echo "$session --- $sessions_failed"
+                            limit=$sessions*$percent
+                            sessions_failed=$((sessions_failed * 100))
+                            echo "$limit --- $sessions_failed"
+                            if [[ $sessions_failed -gt $limit ]]
+                            then
+                                echo "ERROR stress $Result_ID too many failed sessions"
+                                exit 501
+                            fi
+
                         } || echo "$(date) no data"
                     done
                     if [[ $found -eq 1 ]]
@@ -185,6 +209,7 @@ jobs:
       - login:
           uid: "99732cae08ae43b7a1d17f3564fdf135"
           stress_id: "131492"
+          failed_sessions_percentage: 5
   get_st_details:
     docker:
       - image: cimg/base:current
