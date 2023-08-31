@@ -229,16 +229,31 @@ jobs:
 workflows:
   build_and_test:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /^v.*/
       - login_via_api:
           requires:
             - build
+          filters:
+            tags:
+              only: /^v.*/
       - get_st_details:
           requires:
             - login_via_api
+          filters:
+            tags:
+              only: /^v.*/
       - start:
           requires:
             - get_st_details
+          filters:
+            tags:
+              only: /^v.*/
       - get_st_results:
           requires:
             - start
+          filters:
+            tags:
+              only: /^v.*/
